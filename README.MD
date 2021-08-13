@@ -20,7 +20,7 @@ podman run -dt \
   --name mailautoconf \
   -v ./config:/var/www/html/config \
   -p 8010:80 \
-  pswilde/automailconf
+  pswilde/mailautoconf
 ```
 You will need a reverse proxy server to publish to the outside world and handle SSL encryption.  
 For example, in nginx:
