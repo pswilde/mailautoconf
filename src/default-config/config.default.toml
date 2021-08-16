@@ -1,0 +1,13 @@
+# Sample config.ini file.
+# Copy this file to "config/config.ini" and adjust the settings to your requirements
+
+# The URL of this application
+BaseURL = "https://autoconfig.example.com"
+
+# Set the email domains for use with this service. The first one is primary.
+# each will need their own DNS A record for autoconfig.domain.name
+Domains = ["example.com","example2,com"]
+
+
+# If you use a different domain to authenticate with, enter it here
+LogonDomain = "example.local"

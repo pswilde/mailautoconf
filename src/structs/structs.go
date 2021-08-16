@@ -1,8 +1,7 @@
 package structs
-// I don't like the name of this package, consider naming it "core" or
-// separating out the structs and core functions
 
 import "net/http"
+
 
 type Session struct {
   ResponseWriter http.ResponseWriter
@@ -11,8 +10,29 @@ type Session struct {
   WebContent string
 }
 type Config struct {
-  Services []Service
+  BaseURL string
+  Domains []string
+  LogonDomain string
+  Services []interface{}
 }
 type Service struct {
-
+  Name string
+  Enabled bool
+  Type string
+  Server string
+  Port int
+  SocketType string
+  SPA bool
+  UsernameIsFQDN bool
+  NoAuthRequired bool
+  Authentication string
+  // For Outgoing Mail
+  POPAuth bool
+  SMTPLast bool
+  // For WebMail (Unused)
+  UsernameDivID string
+  UsernameDivName string
+  PasswordDivName string
+  SubmitButtonID string
+  SubmitButtonName string
 }

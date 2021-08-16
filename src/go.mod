@@ -3,5 +3,6 @@ module mailautoconf
 go 1.16
 
 require (
-	github.com/vaughan0/go-ini v0.0.0-20130923145212-a98ad7ee00ec // indirect
+	github.com/pelletier/go-toml v1.9.3 // indirect
+	github.com/pelletier/go-toml/v2 v2.0.0-beta.3 // indirect
 )

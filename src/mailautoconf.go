@@ -5,12 +5,12 @@ import (
   "net/http"
   "log"
 	"mailautoconf/web/handler"
-	. "mailautoconf/global"
+	"mailautoconf/global"
 )
 
 func main() {
-	MainConfig = NewConfig()
+	global.NewConfig()
   http.HandleFunc("/", handler.WebHandler)
-	fmt.Println("Starting up Web Listener on port 8080")
-  log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("Starting up Web Listener on port 8010")
+  log.Fatal(http.ListenAndServe(":8010", nil))
 }
