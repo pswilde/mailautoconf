@@ -21,6 +21,7 @@ func MozAutoconfig() string {
   tmpl := "templates/autoconfig.xml"
   response := Response{}
   response.Email = global.ThisSession.Request.FormValue("emailaddress")
+  email = response.Email
   response.Config = global.MainConfig
 
   name := path.Base(tmpl)
