@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">
+  <Response xmlns="http://schemas.microsoft.com/exchange/autodiscover/outlook/responseschema/2006a">
+    <Account>
+      <AccountType>email</AccountType>
+      <Action>settings</Action>
+      {{ with .Config.InMail }}
+      <Protocol>
+        <Type>{{ .Type }}</Type>
+        <Server>{{ .Server }}</Server>
+        <Port>{{ .Port }}</Port>
+        <DomainRequired>{{ .UsernameIsFQDN | onoff }}</DomainRequired>
+        <LoginName>{{ . | parseUsername }}</LoginName>
+        <SPA>{{ .SPA | onoff }}</SPA>
+        <SSL>{{ if eq .SocketType "SSL" }}on{{ else }}off{{ end }}</SSL>
+        <AuthRequired>{{ not .NoAuthRequired | onoff }}</AuthRequired>
+      </Protocol>
+      {{ end }}
+      {{ with .Config.OutMail }}
+      <Protocol>
+        <Type>{{ .Type }}</Type>
+        <Server>{{ .Server }}</Server>
+        <Port>{{ .Port }}</Port>
+        <DomainRequired>{{ .UsernameIsFQDN | onoff }}</DomainRequired>
+        <LoginName>{{ . | parseUsername }}</LoginName>
+        <SPA>{{ .SPA | onoff }}</SPA>
+        <Encryption>{{ .SocketType }}</Encryption>
+        <AuthRequired>{{ not .NoAuthRequired | onoff }}</AuthRequired>
+        <UsePOPAuth>{{ .POPAuth | onoff }}</UsePOPAuth>
+        <SMTPLast>{{ .SMTPLast | onoff }}</SMTPLast>
+      </Protocol>
+      {{ end }}
+    </Account>
+  </Response>
+</Autodiscover>

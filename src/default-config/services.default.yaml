@@ -28,6 +28,9 @@ InMail:
   # Change to true if you need the domain/logondomain to form part of the username
   UsernameIsFQDN: false
 
+  # Use the LogonDomain instead of the Email Domain
+  RequireLocalDomain : false
+
   # Do you need to authenticate to your mail server? You should! so this should be false!
   NoAuthRequired: false
 
@@ -67,6 +70,9 @@ OutMail:
   # Change to true if you need the domain/logondomain to form part of the username
   UsernameIsFQDN: false
 
+  # Use the LogonDomain instead of the Email Domain
+  RequireLocalDomain : false
+
   # Do you need to authenticate to your mail server? You should! so this should be false!
   NoAuthRequired: false
 
@@ -87,6 +93,7 @@ Calendar:
   Type: "CalDAV"
   Authentication: "http-basic"
   UsernameIsFQDN: false
+  RequireLocalDomain : false
 
 # Currently not implemented, see https://wiki.mozilla.org/Thunderbird:Autoconfiguration:ConfigFileFormat
 AddressBook:
@@ -98,6 +105,7 @@ AddressBook:
   Type: "CardDAV"
   Authentication: "http-basic"
   UsernameIsFQDN: false
+  RequireLocalDomain : false
 
 # Currently not implemented, see https://wiki.mozilla.org/Thunderbird:Autoconfiguration:ConfigFileFormat
 WebMail:
@@ -111,6 +119,7 @@ WebMail:
   SubmitButtonID: "submit"
   SubmitButtonName: "submit"
   UsernameIsFQDN: false
+  RequireLocalDomain : false
 
 
 # In theory, additional custom services can be configured and will be displayed with

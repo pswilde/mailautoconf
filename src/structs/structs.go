@@ -14,11 +14,12 @@ type Config struct {
   Version string           `yaml:"Version"`
   BaseURL string           `yaml:"BaseURL"`
   Domains []string         `yaml:"Domains"`
-  LogonDomain string       `yaml:"LogonDomain"`
+  LocalDomain string       `yaml:"LocalDomain"`
   InMail Service           `yaml:"InMail"`
   OutMail Service          `yaml:"OutMail"`
   Calendar Service         `yaml:"Calendar"`
   AddressBook Service      `yaml:"AddressBook"`
+  WebMail Service          `yaml:"WebMail"`
   OtherServices []Service  `yaml:"OtherServices"`
 
 }
@@ -29,8 +30,9 @@ type Service struct {
   Server string           `yaml:"Server"`
   Port int                `yaml:"Port"`
   SocketType string       `yaml:"SocketType"`
-  SPA bool                `yaml:"SPA"`
+  SPA bool                `yaml:"SPA"`          
   UsernameIsFQDN bool     `yaml:"UsernameIsFQDN"`
+  RequireLocalDomain bool `yaml:"RequireLocalDomain"`
   NoAuthRequired bool     `yaml:"NoAuthRequired"`
   Authentication string   `yaml:"Authentication"`
   // For Outgoing Mail
@@ -44,10 +46,12 @@ type Service struct {
   SubmitButtonName string `yaml:"SubmitButtonName"`
 }
 type Response struct {
-  Url string              `json:"url"`
-  ContentType string      `json:"content_type"`
-  Message string          `json:"message"`
-  Content []interface{}   `json:"content"`
+  Url string                       `json:"url"`
+  ContentType string               `json:"content_type"`
+  Message string                   `json:"message"`
+  Content map[string]interface{}   `json:"content"`
+  Config Config
+  Email string
 }
 type MSAutodiscoverJSONResponse struct {
   // More work to do - handling of MS Autodiscover.json requests

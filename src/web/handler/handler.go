@@ -8,6 +8,7 @@ import (
   "fmt"
 )
 func WebHandler(w http.ResponseWriter, r *http.Request) {
+  fmt.Println("Request For :",r.URL)
   ThisSession = Session{}
   ThisSession.ResponseWriter = w
   ThisSession.Request = r
@@ -15,9 +16,9 @@ func WebHandler(w http.ResponseWriter, r *http.Request) {
   if ThisSession.Path == "" {
     ThisSession.Path = "none"
   }
-
   switch ThisSession.Path {
-  case "mail/config-v1.1.xml":
+  case "mail/config-v1.1.xml",
+       "mail/autoconfig.xml":
     ThisSession.WebContent = responses.MozAutoconfig()
   case "autodiscover/autodiscover.xml":
     ThisSession.WebContent = responses.MsAutoDiscoverXML()

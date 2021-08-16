@@ -14,4 +14,4 @@ Domains :
   - "example2,com"
 
 # If you use a different domain to authenticate with, enter it here
-LogonDomain : "example.local"
+LocalDomain : "example.local"
