@@ -64,6 +64,8 @@ func MsAutoDiscoverXML() string {
   return result.String()
 }
 func MsAutoDiscoverJSON() string {
+  // Example Request
+  // /autodiscover/autodiscover.json?Email=you@your.domain&Protocol=Autodiscoverv1&RedirectCount=1
   return ""
 }
 func DefaultResponse() string {
