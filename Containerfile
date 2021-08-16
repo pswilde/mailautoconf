@@ -1,15 +1,22 @@
-FROM php:7.4-apache
+FROM golang:1-alpine3.14 AS builder
 
-COPY src/ /var/www/html/
+COPY src/ /mailautoconf
+WORKDIR /mailautoconf
+RUN go build -o /mailautoconf/mailautoconf
+
+FROM alpine:3.14
+
+ENV UID=1426 \
+    GID=1426
+
+RUN apk add --no-cache bash
+COPY --from=builder /mailautoconf/mailautoconf /mailautoconf/mailautoconf
+COPY --from=builder /mailautoconf/default-config /mailautoconf/default-config
+COPY --from=builder /mailautoconf/templates /mailautoconf/templates
 
 COPY ./entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-# Use the default production configuration
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-
-RUN a2enmod rewrite
-
-EXPOSE 80
+EXPOSE 8010
 
 ENTRYPOINT ["/entrypoint.sh"]
