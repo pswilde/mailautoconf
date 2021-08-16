@@ -6,7 +6,7 @@ function write_file() {
   while read line;
   do
     first_char=${line:0:1}
-    first_vers=$(line:0:7)
+    first_vers=${line:0:7}
     if [[ $first_vers == "Version" ]]; then
       line="# This is the sample config file for MailAutoConf "$line
     elif [[ $first_char != "#" ]]; then
