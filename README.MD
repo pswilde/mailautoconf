@@ -13,13 +13,13 @@ https://wiki.mozilla.org/Thunderbird:Autoconfiguration:ConfigFileFormat, should
 be able to auto-configure using this service.
 
 ## Installation
-The container file includes set up for an apache webserver to run the application.
+MailAutoConf runs its own webserver on port 8010.
 You will need to supply a volume for the configuration file and port forwarding.
 ```
 podman run -dt \
   --name mailautoconf \
-  -v ./config:/var/www/html/config \
-  -p 8010:80 \
+  -v ./config:/mailautoconf/config \
+  -p 8010:8010 \
   pswilde/mailautoconf
 ```
 You will need a reverse proxy server to publish to the outside world and handle SSL encryption.  
@@ -40,7 +40,7 @@ server {
   }
 }
 ```  
-First run will create sample.ini files in the config directory. Copy these to config.ini and services.ini and configure them to your needs.  
+First run will create sample.yaml files in the config directory. Copy these to config.yaml and services.yaml and configure them to your needs.  
 
 MailAutoConf will handle all the URLs it's able to deal with, i.e. /mail/config-v1.1.xml, /Autodiscover/Autodiscover.xml automatically.  
 
@@ -63,7 +63,7 @@ MailAutoConf has been tested and confirmed working with the following software p
 - [x] Nextcloud Mail app
 - [ ] Other Mail Clients are likely supported if they support /mail/config-v1.1.xml
 
- 
+
 
 ## Future plans
 MailAutoConf is currently in _very_ early stages, with a _very_ limited set of features.

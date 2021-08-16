@@ -3,7 +3,7 @@ services:
     mailautoconf:
         container_name: mailautoconf
         ports:
-            - '8010:80'
+            - '8010:8010'
         volumes:
-            - './config:/var/www/html/config'
+            - './config:/mailautoconf/config'
         image: pswilde/mailautoconf
