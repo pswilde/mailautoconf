@@ -85,13 +85,13 @@ func parseUsername(svc Service) string {
   if svc.UsernameIsFQDN && !svc.RequireLocalDomain{
     return email
   } else if svc.UsernameIsFQDN && svc.RequireLocalDomain {
-    re := regexp.MustCompile(`[^@]+$`)
+    re := regexp.MustCompile(`[^@(%40)]+$`)
     domain := re.FindString(email)
     localemail := strings.Replace(email, domain,
                           global.MainConfig.LocalDomain,1)
     return localemail
   } else {
-    re := regexp.MustCompile(`^[^@]+`)
+    re := regexp.MustCompile(`^[^@(%40)]+`)
     username := re.FindString(email)
     return username
   }
