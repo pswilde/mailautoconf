@@ -12,6 +12,7 @@ import (
 // Global variables
 var ThisSession Session
 var MainConfig Config
+
 const defaultConfigDir string = "default-config/"
 const configDir string = "config/"
 
@@ -33,6 +34,7 @@ func loadConfig() Config {
   fmt.Println("Loading Custom Services…")
   customsvcfile := configDir + "services.yaml"
   unmarshalConfig(customsvcfile, &cfg)
+  removeDisabledItems(&cfg)
   return cfg
 }
 
@@ -44,12 +46,36 @@ func unmarshalConfig(file string, cfg *Config)  {
     }
     err2 := yaml.Unmarshal(content, &cfg)
     if err2 != nil {
-      fmt.Println("Error unmarshalling config :", file, " : ", err2)
+      fmt.Println("Error unmarshaling config :", file, " : ", err2)
     }
   }
 }
 
-
+func removeDisabledItems(cfg *Config) {
+  // Rework this, not pretty
+  if !cfg.InMail.Enabled {
+    cfg.InMail = Service{}
+  }
+  if !cfg.OutMail.Enabled {
+    cfg.OutMail = Service{}
+  }
+  if !cfg.Calendar.Enabled {
+    cfg.Calendar = Service{}
+  }
+  if !cfg.AddressBook.Enabled {
+    cfg.AddressBook = Service{}
+  }
+  if !cfg.WebMail.Enabled {
+    cfg.WebMail = Service{}
+  }
+  new_svcs := []Service{}
+  for _,svc := range cfg.OtherServices {
+    if svc.Enabled {
+      new_svcs = append(new_svcs,svc)
+    }
+  }
+  cfg.OtherServices = new_svcs
+}
 func FileExists(file string) bool {
   exists := false
   if _, err := os.Stat(file); err == nil {

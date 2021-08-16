@@ -81,7 +81,7 @@ func OurConfig() string {
 }
 func parseUsername(svc Service) string {
   if email == "" {
-    return "<!-- not provided -->"
+    return "not-provided"
   }
   if svc.UsernameIsFQDN && !svc.RequireLocalDomain{
     return email

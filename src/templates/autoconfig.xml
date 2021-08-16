@@ -1,50 +1,60 @@
 <clientConfig version="1.1">
- <emailProvider id="{{ index .Config.Domains 0 }}">
-   {{ range .Config.Domains }}<domain>{{ . }}</domain>
-   {{ end }}
-   <displayName>{{ .Email }}</displayName>
-   {{ with .Config.InMail }}
-     <incomingServer type="{{ .Type | lower }}">
-       <hostname>{{ .Server }}</hostname>
-       <port>{{ .Port }}</port>
-       <socketType>{{ .SocketType }}</socketType>
-       <username>{{ . | parseUsername }}</username>
-       <authentication>{{ .Authentication }}</authentication>
-     </incomingServer>
-   {{ end }}
-   {{ with .Config.OutMail }}
-   <outgoingServer type="{{ .Type | lower }}">
-     <hostname>{{ .Server }}</hostname>
-     <port>{{ .Port }}></port>
-     <socketType>{{ .SocketType }}</socketType>
-     <username>{{ . | parseUsername }}</username>
-     <authentication>{{ .Authentication }}</authentication>
-   </outgoingServer>
-   {{ end }}
-   {{ with .Config.AddressBook }}
-    <addressBook type="{{ .Type | lower }}">
-      <username>{{ . | parseUsername }}</username>
-      <authentication>{{ .Authentication }}</authentication>
-      <serverURL>{{ .Server }}</serverURL>
-    </addressBook>
+  <emailProvider id="{{ index .Config.Domains 0 }}">
+    {{ range .Config.Domains }}<domain>{{ . }}</domain>
+    {{ end }}
+    <displayName>{{ .Email }}</displayName>
+    {{ with .Config.InMail }}
+      {{ if .Enabled }}
+        <incomingServer type="{{ .Type | lower }}">
+          <hostname>{{ .Server }}</hostname>
+          <port>{{ .Port }}</port>
+          <socketType>{{ .SocketType }}</socketType>
+          <username>{{ . | parseUsername }}</username>
+          <authentication>{{ .Authentication }}</authentication>
+        </incomingServer>
+      {{ end }}
+    {{ end }}
+    {{ with .Config.OutMail }}
+      {{ if .Enabled }}
+        <outgoingServer type="{{ .Type | lower }}">
+          <hostname>{{ .Server }}</hostname>
+          <port>{{ .Port }}></port>
+          <socketType>{{ .SocketType }}</socketType>
+          <username>{{ . | parseUsername }}</username>
+          <authentication>{{ .Authentication }}</authentication>
+        </outgoingServer>
+      {{ end }}
+    {{ end }}
+    {{ with .Config.AddressBook }}
+      {{ if .Enabled }}
+        <addressBook type="{{ .Type | lower }}">
+          <username>{{ . | parseUsername }}</username>
+          <authentication>{{ .Authentication }}</authentication>
+          <serverURL>{{ .Server }}</serverURL>
+        </addressBook>
+      {{ end }}
     {{ end }}
     {{ with .Config.Calendar }}
-    <calendar type="{{ .Type | lower }}">
-      <username>{{ . | parseUsername }}</username>
-      <authentication>{{ .Authentication }}</authentication>
-      <serverURL>{{ .Server }}</serverURL>
-    </calendar>
+      {{ if .Enabled }}
+        <calendar type="{{ .Type | lower }}">
+          <username>{{ . | parseUsername }}</username>
+          <authentication>{{ .Authentication }}</authentication>
+          <serverURL>{{ .Server }}</serverURL>
+        </calendar>
+      {{ end }}
     {{ end }}
     {{ with .Config.WebMail }}
-    <webMail>
-      <loginPage url="{{ .Server }}" />
-      <loginPageInfo url="{{ .Server }}">
-        <username>{{ . | parseUsername }}</username>
-        <usernameField id="{{ .UsernameDivID }}" name="{{ .UsernameDivID }}" />
-        <passwordField name="{{ .PasswordDivName }}" />
-        <loginButton id="{{ .SubmitButtonID }}" name="{{ .SubmitButtonName }}"/>
-      </loginPageInfo>
-    </webMail>
+      {{ if .Enabled }}
+        <webMail>
+          <loginPage url="{{ .Server }}" />
+          <loginPageInfo url="{{ .Server }}">
+            <username>{{ . | parseUsername }}</username>
+            <usernameField id="{{ .UsernameDivID }}" name="{{ .UsernameDivID }}" />
+            <passwordField name="{{ .PasswordDivName }}" />
+            <loginButton id="{{ .SubmitButtonID }}" name="{{ .SubmitButtonName }}"/>
+          </loginPageInfo>
+        </webMail>
+      {{ end }}
     {{ end }}
  </emailProvider>
 </clientConfig>

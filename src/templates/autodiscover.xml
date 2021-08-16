@@ -5,30 +5,34 @@
       <AccountType>email</AccountType>
       <Action>settings</Action>
       {{ with .Config.InMail }}
-      <Protocol>
-        <Type>{{ .Type }}</Type>
-        <Server>{{ .Server }}</Server>
-        <Port>{{ .Port }}</Port>
-        <DomainRequired>{{ .UsernameIsFQDN | onoff }}</DomainRequired>
-        <LoginName>{{ . | parseUsername }}</LoginName>
-        <SPA>{{ .SPA | onoff }}</SPA>
-        <SSL>{{ if eq .SocketType "SSL" }}on{{ else }}off{{ end }}</SSL>
-        <AuthRequired>{{ not .NoAuthRequired | onoff }}</AuthRequired>
-      </Protocol>
+        {{ if .Enabled }}
+          <Protocol>
+            <Type>{{ .Type }}</Type>
+            <Server>{{ .Server }}</Server>
+            <Port>{{ .Port }}</Port>
+            <DomainRequired>{{ .UsernameIsFQDN | onoff }}</DomainRequired>
+            <LoginName>{{ . | parseUsername }}</LoginName>
+            <SPA>{{ .SPA | onoff }}</SPA>
+            <SSL>{{ if eq .SocketType "SSL" }}on{{ else }}off{{ end }}</SSL>
+            <AuthRequired>{{ not .NoAuthRequired | onoff }}</AuthRequired>
+          </Protocol>
+        {{ end }}
       {{ end }}
       {{ with .Config.OutMail }}
-      <Protocol>
-        <Type>{{ .Type }}</Type>
-        <Server>{{ .Server }}</Server>
-        <Port>{{ .Port }}</Port>
-        <DomainRequired>{{ .UsernameIsFQDN | onoff }}</DomainRequired>
-        <LoginName>{{ . | parseUsername }}</LoginName>
-        <SPA>{{ .SPA | onoff }}</SPA>
-        <Encryption>{{ .SocketType }}</Encryption>
-        <AuthRequired>{{ not .NoAuthRequired | onoff }}</AuthRequired>
-        <UsePOPAuth>{{ .POPAuth | onoff }}</UsePOPAuth>
-        <SMTPLast>{{ .SMTPLast | onoff }}</SMTPLast>
-      </Protocol>
+        {{ if .Enabled }}
+          <Protocol>
+            <Type>{{ .Type }}</Type>
+            <Server>{{ .Server }}</Server>
+            <Port>{{ .Port }}</Port>
+            <DomainRequired>{{ .UsernameIsFQDN | onoff }}</DomainRequired>
+            <LoginName>{{ . | parseUsername }}</LoginName>
+            <SPA>{{ .SPA | onoff }}</SPA>
+            <Encryption>{{ .SocketType }}</Encryption>
+            <AuthRequired>{{ not .NoAuthRequired | onoff }}</AuthRequired>
+            <UsePOPAuth>{{ .POPAuth | onoff }}</UsePOPAuth>
+            <SMTPLast>{{ .SMTPLast | onoff }}</SMTPLast>
+          </Protocol>
+        {{ end }}
       {{ end }}
     </Account>
   </Response>
