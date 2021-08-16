@@ -1,5 +1,8 @@
 # MailAutoConf - a simple, configurable autodiscover/autoconfig service for distributed and self-hosted services.  
 
+## New GoLang version - please make sure you update your ini files to yaml!
+Github: https://github.com/pswilde/mailautoconf
+
 ## What is MailAutoConf?
 MailAutoConf is autodiscover/autoconfig web server for self-hosted mail services
 which do not have their own autodiscover service.
