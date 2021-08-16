@@ -2,9 +2,10 @@ package global
 import (
   . "mailautoconf/structs"
   "fmt"
-  "github.com/pelletier/go-toml/v2"
+  "gopkg.in/yaml.v2"
   "io/ioutil"
   "os"
+  "encoding/json"
 
 )
 
@@ -20,75 +21,36 @@ func NewConfig() Config {
 }
 func loadConfig() Config {
   cfg := Config{}
-
   fmt.Println("Loading Default Config…")
-  cfgfile := defaultConfigDir + "config.default.toml"
+  cfgfile := defaultConfigDir + "config.default.yaml"
   unmarshalConfig(cfgfile, &cfg)
-  fmt.Println(cfg)
-  customcfgfile := configDir + "config.toml"
+  fmt.Println("Loading Custom Config…")
+  customcfgfile := configDir + "config.yaml"
   unmarshalConfig(customcfgfile, &cfg)
-  fmt.Println(cfg)
-  svcfile := defaultConfigDir + "services.default.toml"
-  // cfg.Services = []Service{
-  //   Service{
-  //     Name : "first",
-  //   },
-  //   Service{
-  //     Name : "second",
-  //   },
-  //   Service{
-  //     Name : "third",
-  //   },
-  // }
-  // data, _ := toml.Marshal(cfg)
-
-  // ioutil.WriteFile(svcfile, data, 0)
-
-  unmarshalServices(svcfile, &cfg)
-
-  customsvcfile := configDir + "services.toml"
-  unmarshalServices(customsvcfile, &cfg)
-  // fmt.Println(cfg)
-  fmt.Println("\r\nOur Config :")
-  fmt.Println(cfg)
+  fmt.Println("Loading Default Services…")
+  svcfile := defaultConfigDir + "services.default.yaml"
+  unmarshalConfig(svcfile, &cfg)
+  fmt.Println("Loading Custom Services…")
+  customsvcfile := configDir + "services.yaml"
+  unmarshalConfig(customsvcfile, &cfg)
   return cfg
 }
 
 func unmarshalConfig(file string, cfg *Config)  {
-  if fileExists(file) {
+  if FileExists(file) {
     content, err := ioutil.ReadFile(file)
     if err != nil {
       fmt.Println("Error reading config :", file, " : ", err)
     }
-    err2 := toml.Unmarshal(content, &cfg)
+    err2 := yaml.Unmarshal(content, &cfg)
     if err2 != nil {
       fmt.Println("Error unmarshalling config :", file, " : ", err2)
     }
   }
 }
 
-func unmarshalServices(file string, cfg *Config)  {
-  if fileExists(file) {
-    content, err := ioutil.ReadFile(file)
-    if err != nil {
-      fmt.Println("Error reading services :", file, " : ", err)
-    }
-    customsvcfile := configDir + "services.toml"
-    content2, err2 := ioutil.ReadFile(file)
-    if err2 != nil {
-      fmt.Println("Error reading services :", customsvcfile, " : ", err2)
-    }
-    content = []byte(fmt.Sprintf(string(content),string(content2)))
-    var x map[string]interface{}
-    err3 := toml.Unmarshal(content, &x)
-    if err3 != nil {
-      fmt.Println("Error unmarshalling services :", file, " : ", err3)
-    }
-    fmt.Println(x)
-  }
-}
 
-func fileExists(file string) bool {
+func FileExists(file string) bool {
   exists := false
   if _, err := os.Stat(file); err == nil {
     exists = true
@@ -97,4 +59,12 @@ func fileExists(file string) bool {
     fmt.Printf("File %s does not exist\n", file);
   }
   return exists
+}
+
+func JSONify(content interface{}) string {
+  data, err := json.Marshal(content)
+  if err != nil {
+    fmt.Println(err)
+  }
+  return string(data)
 }

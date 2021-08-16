@@ -12,6 +12,9 @@ func WebHandler(w http.ResponseWriter, r *http.Request) {
   ThisSession.ResponseWriter = w
   ThisSession.Request = r
   ThisSession.Path = strings.ToLower(r.URL.Path[1:])
+  if ThisSession.Path == "" {
+    ThisSession.Path = "none"
+  }
 
   switch ThisSession.Path {
   case "mail/config-v1.1.xml":
@@ -20,6 +23,8 @@ func WebHandler(w http.ResponseWriter, r *http.Request) {
     ThisSession.WebContent = responses.MsAutoDiscoverXML()
   case "autodiscover/autodiscover.json":
     ThisSession.WebContent = responses.MsAutoDiscoverJSON()
+  case "get/config":
+    ThisSession.WebContent = responses.OurConfig()
   default:
     ThisSession.WebContent = responses.DefaultResponse()
   }
@@ -28,5 +33,6 @@ func WebHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func writeWebOutput () {
+  ThisSession.ResponseWriter.Header().Set("Content-Type", ThisSession.ContentType)
   fmt.Fprintf(ThisSession.ResponseWriter, ThisSession.WebContent)
 }

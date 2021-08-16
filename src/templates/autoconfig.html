@@ -1,7 +1,13 @@
-<!--  The below link has config-v1.1.xml information
- https://wiki.mozilla.org/Thunderbird:Autoconfiguration:ConfigFileFormat -->
+
+<h1>Go templates</h1>
+<p>The user is {{ .Name }}</p>
+<h2>Skills:</h2>
+{{ range .Skills }}
+    <p>{{ . }}</p>
+{{ end }}
+
 <clientConfig version="1.1">
- <emailProvider id="<?php echo Core::$Config["PrimaryDomain"]?>">
+ <emailProvider id="<?php echo Core::$Config["PrimaryDomain"]?>">{{ . }}
    <?php foreach (Core::$Config["Domain"] as $domain){ ?>
    <domain><?php echo $domain; ?></domain>
    <?php } ?>

@@ -8,31 +8,53 @@ type Session struct {
   Request *http.Request
   Path string
   WebContent string
+  ContentType string
 }
 type Config struct {
-  BaseURL string
-  Domains []string
-  LogonDomain string
-  Services []interface{}
+  Version string           `yaml:"Version"`
+  BaseURL string           `yaml:"BaseURL"`
+  Domains []string         `yaml:"Domains"`
+  LogonDomain string       `yaml:"LogonDomain"`
+  InMail Service           `yaml:"InMail"`
+  OutMail Service          `yaml:"OutMail"`
+  Calendar Service         `yaml:"Calendar"`
+  AddressBook Service      `yaml:"AddressBook"`
+  OtherServices []Service  `yaml:"OtherServices"`
+
 }
 type Service struct {
-  Name string
-  Enabled bool
-  Type string
-  Server string
-  Port int
-  SocketType string
-  SPA bool
-  UsernameIsFQDN bool
-  NoAuthRequired bool
-  Authentication string
+  Name string             `yaml:"Name"`
+  Enabled bool            `yaml:"Enabled"`
+  Type string             `yaml:"Type"`
+  Server string           `yaml:"Server"`
+  Port int                `yaml:"Port"`
+  SocketType string       `yaml:"SocketType"`
+  SPA bool                `yaml:"SPA"`
+  UsernameIsFQDN bool     `yaml:"UsernameIsFQDN"`
+  NoAuthRequired bool     `yaml:"NoAuthRequired"`
+  Authentication string   `yaml:"Authentication"`
   // For Outgoing Mail
-  POPAuth bool
-  SMTPLast bool
+  POPAuth bool            `yaml:"POPAuth"`
+  SMTPLast bool           `yaml:"SMTPLast"`
   // For WebMail (Unused)
-  UsernameDivID string
-  UsernameDivName string
-  PasswordDivName string
-  SubmitButtonID string
-  SubmitButtonName string
+  UsernameDivID string    `yaml:"UsernameDivID"`
+  UsernameDivName string  `yaml:"UsernameDivName"`
+  PasswordDivName string  `yaml:"PasswordDivName"`
+  SubmitButtonID string   `yaml:"SubmitButtonID"`
+  SubmitButtonName string `yaml:"SubmitButtonName"`
+}
+type Response struct {
+  Url string              `json:"url"`
+  ContentType string      `json:"content_type"`
+  Message string          `json:"message"`
+  Content []interface{}   `json:"content"`
+}
+type MSAutodiscoverJSONResponse struct {
+  // More work to do - handling of MS Autodiscover.json requests
+  Protocol string
+  Url string
+}
+type MSAutodiscoverJSONError struct{
+  ErrorCode string
+  ErrorMessage string
 }
