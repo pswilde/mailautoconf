@@ -30,7 +30,7 @@ type Service struct {
   Server string           `yaml:"Server"`
   Port int                `yaml:"Port"`
   SocketType string       `yaml:"SocketType"`
-  SPA bool                `yaml:"SPA"`          
+  SPA bool                `yaml:"SPA"`
   UsernameIsFQDN bool     `yaml:"UsernameIsFQDN"`
   RequireLocalDomain bool `yaml:"RequireLocalDomain"`
   NoAuthRequired bool     `yaml:"NoAuthRequired"`
@@ -50,8 +50,8 @@ type Response struct {
   ContentType string               `json:"content_type"`
   Message string                   `json:"message"`
   Content map[string]interface{}   `json:"content"`
-  Config Config
-  Email string
+  Config Config                    `json:"_"`
+  Email string                     `json:"_"`
 }
 type MSAutodiscoverJSONResponse struct {
   // More work to do - handling of MS Autodiscover.json requests
