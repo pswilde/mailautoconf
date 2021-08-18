@@ -110,6 +110,6 @@ func DefaultResponse() string {
 }
 func OurConfig() string {
   global.ThisSession.ContentType = "application/json"
-  content := global.JSONify(global.MainConfig)
+  content := global.JSONifyConfig(global.MainConfig)
   return content
 }

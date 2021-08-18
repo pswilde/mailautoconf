@@ -108,7 +108,11 @@ func removeDisabledItems(cfg *Config) {
   cfg.OtherServices = new_svcs
 }
 
-
+func JSONifyConfig(content Config) string {
+  data, err := json.Marshal(content)
+  logger.CheckError(err)
+  return string(data)
+}
 func JSONify(content interface{}) string {
   data, err := json.Marshal(content)
   logger.CheckError(err)
