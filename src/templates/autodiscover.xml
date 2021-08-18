@@ -11,7 +11,7 @@
             <Server>{{ .Server }}</Server>
             <Port>{{ .Port }}</Port>
             <DomainRequired>{{ .UsernameIsFQDN | onoff }}</DomainRequired>
-            <LoginName>{{ . | parseUsername }}</LoginName>
+            <LoginName>{{ $.Email | parseUsername . }}</LoginName>
             <SPA>{{ .SPA | onoff }}</SPA>
             <SSL>{{ if eq .SocketType "SSL" }}on{{ else }}off{{ end }}</SSL>
             <AuthRequired>{{ not .NoAuthRequired | onoff }}</AuthRequired>
@@ -25,7 +25,7 @@
             <Server>{{ .Server }}</Server>
             <Port>{{ .Port }}</Port>
             <DomainRequired>{{ .UsernameIsFQDN | onoff }}</DomainRequired>
-            <LoginName>{{ . | parseUsername }}</LoginName>
+            <LoginName>{{ $.Email | parseUsername . }}</LoginName>
             <SPA>{{ .SPA | onoff }}</SPA>
             <Encryption>{{ .SocketType }}</Encryption>
             <AuthRequired>{{ not .NoAuthRequired | onoff }}</AuthRequired>

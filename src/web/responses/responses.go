@@ -2,42 +2,47 @@ package responses
 import (
   "mailautoconf/global"
   . "mailautoconf/structs"
-  "text/template"
+  // "text/template"
   "fmt"
-  "path"
+  // "path"
   "strings"
   "bytes"
   "regexp"
 )
 var email string
-var fmap = template.FuncMap{
-    "lower": strings.ToLower,
-    "parseUsername": parseUsername,
-    "onoff": chooseOnOff,
-  }
+
 func MozAutoconfig() string {
   // The below link has config-v1.1.xml information
   // https://wiki.mozilla.org/Thunderbird:Autoconfiguration:ConfigFileFormat
-  tmpl := "templates/autoconfig.xml"
+
+  // parse the querystring
+  if err := global.ThisSession.Request.ParseForm(); err != nil {
+    fmt.Println(err)
+  }
+
+  // build the response
   response := Response{}
   response.Email = global.ThisSession.Request.FormValue("emailaddress")
   email = response.Email
   response.Config = global.MainConfig
 
-  name := path.Base(tmpl)
-  t, err1 := template.New(name).Funcs(fmap).ParseFiles(tmpl)
-  if err1 != nil {
-    panic (err1)
-  }
+  // set content type to XML
   global.ThisSession.ContentType = "application/xml"
+
+  // execute the template
   var result bytes.Buffer
-  err := t.Execute(&result, response)
+  template := global.Templates["autoconfig.xml"]
+  err := template.Execute(&result, response)
   if err != nil {
     fmt.Println(err)
   }
+
+  // return our string of xml
   return result.String()
 }
 func MsAutoDiscoverXML() string {
+  // MS Outlook Autodiscover.xml
+  //
   // Example POST Request (sent from client) :
   // <?xml version="1.0" \?\>
   // <Autodiscover xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/exchange/autodiscover/outlook/requestschema/2006">
@@ -46,27 +51,64 @@ func MsAutoDiscoverXML() string {
   //     <AcceptableResponseSchema>http://schemas.microsoft.com/exchange/autodiscover/outlook/responseschema/2006a</AcceptableResponseSchema>
   //   </Request>
   // </Autodiscover>
-  tmpl := "templates/autodiscover.xml"
-  email = global.ThisSession.Request.FormValue("EMailAddress")
-  response := Response{}
-  response.Config = global.MainConfig
-  name := path.Base(tmpl)
-  t, err1 := template.New(name).Funcs(fmap).ParseFiles(tmpl)
-  if err1 != nil {
-    panic (err1)
+
+  // Parse the form to get the values
+  if err := global.ThisSession.Request.ParseForm(); err != nil {
+    fmt.Println(err)
   }
+
+  // convert the input to a string so we can extract the email address
+  form := fmt.Sprintf("%s",global.ThisSession.Request.Form)
+
+  // fine the EMailAddress section
+  find := regexp.MustCompile(`\<EMailAddress\>(.*?)\<\/EMailAddress\>`)
+  email = find.FindString(form)
+
+  // replace the tags
+  replace := regexp.MustCompile(`\<[\/]?EMailAddress\>`)
+  email = replace.ReplaceAllString(email,``)
+
+  fmt.Printf("Session %s Request for email : %s\r\f",global.ThisSession.ID,email)
+  // build the reponse
+  response := Response{}
+  response.Email = email
+  response.Config = global.MainConfig
+
+  // execute the template
+  template := global.Templates["autodiscover.xml"]
   global.ThisSession.ContentType = "application/xml"
   var result bytes.Buffer
-  err := t.Execute(&result, response)
+  err := template.Execute(&result, response)
   if err != nil {
     fmt.Println(err)
   }
+
+  // return our string of xml
   return result.String()
 }
 func MsAutoDiscoverJSON() string {
+  // MS Outlook Autodiscover.json - undocumented
+  //
   // Example Request
   // /autodiscover/autodiscover.json?Email=you@your.domain&Protocol=Autodiscoverv1&RedirectCount=1
-  return ""
+  email = global.ThisSession.Request.FormValue("Email")
+  protocol := global.ThisSession.Request.FormValue("Protocol")
+  fmt.Println(protocol)
+  global.ThisSession.ContentType = "application/json"
+  switch strings.ToLower(protocol) {
+  case "autodiscoverv1":
+    response := MSAutodiscoverJSONResponse{}
+    response.Protocol = "AutodiscoverV1"
+    response.Url = fmt.Sprintf("%s/Autodiscover/Autodiscover.xml", global.MainConfig.BaseURL)
+    return global.JSONify(response)
+  default:
+
+    response := MSAutodiscoverJSONError{}
+    response.ErrorCode = "InvalidProtocol";
+    response.ErrorMessage = fmt.Sprintf("The given protocol value '%s' is invalid. Supported values are 'AutodiscoverV1'", protocol)
+    return global.JSONify(response)
+  }
+
 }
 func DefaultResponse() string {
   response := Response{}
@@ -80,29 +122,4 @@ func OurConfig() string {
   global.ThisSession.ContentType = "application/json"
   content := global.JSONify(global.MainConfig)
   return content
-}
-func parseUsername(svc Service) string {
-  if email == "" {
-    return "not-provided"
-  }
-  if svc.UsernameIsFQDN && !svc.RequireLocalDomain{
-    return email
-  } else if svc.UsernameIsFQDN && svc.RequireLocalDomain {
-    re := regexp.MustCompile(`[^@(%40)]+$`)
-    domain := re.FindString(email)
-    localemail := strings.Replace(email, domain,
-                          global.MainConfig.LocalDomain,1)
-    return localemail
-  } else {
-    re := regexp.MustCompile(`^[^@(%40)]+`)
-    username := re.FindString(email)
-    return username
-  }
-}
-func chooseOnOff(value bool) string {
-  if value {
-    return "on"
-  } else {
-    return "off"
-  }
 }

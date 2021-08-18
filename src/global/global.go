@@ -6,18 +6,35 @@ import (
   "io/ioutil"
   "os"
   "encoding/json"
-
+  "text/template"
+  "path"
+  "regexp"
+  "strings"
+  "time"
+  // "reflect"
 )
 
 // Global variables
 var ThisSession Session
 var MainConfig Config
 
+// Template declaration
+var templates []string = []string{"autodiscover.xml","autoconfig.xml"}
+var Templates map[string]*template.Template = make(map[string]*template.Template)
+
 const defaultConfigDir string = "default-config/"
 const configDir string = "config/"
 
+func NewSessionID() string{
+  timecode := time.Now()
+  id := timecode.Format("20060102150405.000")
+  id = strings.Replace(id,".","",1)
+
+  return id
+}
 func NewConfig() Config {
   MainConfig = loadConfig()
+  loadXMLTemplates()
   return MainConfig
 }
 func loadConfig() Config {
@@ -37,7 +54,22 @@ func loadConfig() Config {
   removeDisabledItems(&cfg)
   return cfg
 }
-
+func loadXMLTemplates(){
+  for _, tmpl := range templates {
+    tmpl := fmt.Sprintf("templates/%s",tmpl)
+    name := path.Base(tmpl)
+    var fmap = template.FuncMap{
+        "lower": strings.ToLower,
+        "parseUsername": parseUsername,
+        "onoff": chooseOnOff,
+      }
+    t, err := template.New(name).Funcs(fmap).ParseFiles(tmpl)
+    if err != nil {
+      panic (err)
+    }
+    Templates[name] = t
+  }
+}
 func unmarshalConfig(file string, cfg *Config)  {
   if FileExists(file) {
     content, err := ioutil.ReadFile(file)
@@ -93,4 +125,41 @@ func JSONify(content interface{}) string {
     fmt.Println(err)
   }
   return string(data)
+}
+func parseUsername(svc Service, email string) string {
+  if email == "" {
+    return "not-provided"
+  }
+  if svc.UsernameIsFQDN && !svc.RequireLocalDomain{
+    return email
+  } else if svc.UsernameIsFQDN && svc.RequireLocalDomain {
+    re := regexp.MustCompile(`[^@(%40)]+$`)
+    domain := re.FindString(email)
+    localemail := strings.Replace(email, domain,
+                          MainConfig.LocalDomain,1)
+    return localemail
+  } else {
+    re := regexp.MustCompile(`^[^@(%40)]+`)
+    username := re.FindString(email)
+    return username
+  }
+}
+func chooseOnOff(value bool) string {
+  if value {
+    return "on"
+  } else {
+    return "off"
+  }
+}
+// GetIP gets a requests IP address by reading off the forwarded-for
+// header (for proxies) and falls back to use the remote address.
+func GetSessionIP() string {
+  r := ThisSession.Request
+  ip := r.RemoteAddr
+	forwarded := r.Header.Get("X-FORWARDED-FOR")
+	if forwarded != "" {
+		ip = forwarded
+	}
+  fmt.Printf("Session %s Connect From : %s\r\f",ThisSession.ID, ip)
+	return ip
 }

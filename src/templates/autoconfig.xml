@@ -9,7 +9,7 @@
           <hostname>{{ .Server }}</hostname>
           <port>{{ .Port }}</port>
           <socketType>{{ .SocketType }}</socketType>
-          <username>{{ . | parseUsername }}</username>
+          <username>{{ $.Email | parseUsername .  }}</username>
           <authentication>{{ .Authentication }}</authentication>
         </incomingServer>
       {{ end }}
@@ -20,7 +20,7 @@
           <hostname>{{ .Server }}</hostname>
           <port>{{ .Port }}></port>
           <socketType>{{ .SocketType }}</socketType>
-          <username>{{ . | parseUsername }}</username>
+          <username>{{ $.Email | parseUsername . }}</username>
           <authentication>{{ .Authentication }}</authentication>
         </outgoingServer>
       {{ end }}
@@ -28,7 +28,7 @@
     {{ with .Config.AddressBook }}
       {{ if .Enabled }}
         <addressBook type="{{ .Type | lower }}">
-          <username>{{ . | parseUsername }}</username>
+          <username>{{ $.Email | parseUsername . }}</username>
           <authentication>{{ .Authentication }}</authentication>
           <serverURL>{{ .Server }}</serverURL>
         </addressBook>
@@ -37,7 +37,7 @@
     {{ with .Config.Calendar }}
       {{ if .Enabled }}
         <calendar type="{{ .Type | lower }}">
-          <username>{{ . | parseUsername }}</username>
+          <username>{{ $.Email | parseUsername . }}</username>
           <authentication>{{ .Authentication }}</authentication>
           <serverURL>{{ .Server }}</serverURL>
         </calendar>
@@ -48,7 +48,7 @@
         <webMail>
           <loginPage url="{{ .Server }}" />
           <loginPageInfo url="{{ .Server }}">
-            <username>{{ . | parseUsername }}</username>
+            <username>{{ $.Email | parseUsername . }}</username>
             <usernameField id="{{ .UsernameDivID }}" name="{{ .UsernameDivID }}" />
             <passwordField name="{{ .PasswordDivName }}" />
             <loginButton id="{{ .SubmitButtonID }}" name="{{ .SubmitButtonName }}"/>

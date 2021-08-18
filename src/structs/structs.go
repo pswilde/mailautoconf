@@ -4,12 +4,15 @@ import "net/http"
 
 
 type Session struct {
+  ID string
+  IP string
   ResponseWriter http.ResponseWriter
   Request *http.Request
   Path string
   WebContent string
   ContentType string
 }
+
 type Config struct {
   Version string           `yaml:"Version"`
   BaseURL string           `yaml:"BaseURL"`
@@ -49,7 +52,7 @@ type Response struct {
   Url string                       `json:"url"`
   ContentType string               `json:"content_type"`
   Message string                   `json:"message"`
-  Content map[string]interface{}   `json:"content"`
+  Content map[string]interface{}              `json:"content"`
   Config Config                    `json:"_"`
   Email string                     `json:"_"`
 }
