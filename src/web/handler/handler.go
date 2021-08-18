@@ -1,21 +1,22 @@
 package handler
 import (
-  . "mailautoconf/structs"
+
   . "mailautoconf/global"
+  . "mailautoconf/global/structs"
+  "mailautoconf/global/logger"
   "mailautoconf/web/responses"
   "strings"
   "net/http"
   "fmt"
 )
 func WebHandler(w http.ResponseWriter, r *http.Request) {
-
-
   ThisSession = Session{}
   ThisSession.ResponseWriter = w
   ThisSession.Request = r
-  
+
   ThisSession.ID = NewSessionID()
-  fmt.Printf("Session %s Request For : %s\r\f",ThisSession.ID, r.URL)
+  url := fmt.Sprintf("%s", r.URL)
+  logger.Log("Session ", ThisSession.ID, " Request For : ", url )
   ThisSession.IP = GetSessionIP()
 
   ThisSession.Path = strings.ToLower(r.URL.Path[1:])
@@ -35,11 +36,9 @@ func WebHandler(w http.ResponseWriter, r *http.Request) {
   default:
     ThisSession.WebContent = responses.DefaultResponse()
   }
-
-  writeWebOutput()
+  webOutput()
 }
-
-func writeWebOutput () {
+func webOutput(){
   ThisSession.ResponseWriter.Header().Set("Content-Type", ThisSession.ContentType)
   fmt.Fprintf(ThisSession.ResponseWriter, ThisSession.WebContent)
 }

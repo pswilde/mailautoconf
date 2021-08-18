@@ -1,10 +1,11 @@
 package global
 import (
-  . "mailautoconf/structs"
+  . "mailautoconf/global/structs"
+  "mailautoconf/global/logger"
   "fmt"
   "gopkg.in/yaml.v2"
   "io/ioutil"
-  "os"
+  // "os"
   "encoding/json"
   "text/template"
   "path"
@@ -39,16 +40,16 @@ func NewConfig() Config {
 }
 func loadConfig() Config {
   cfg := Config{}
-  fmt.Println("Loading Default Config…")
+  logger.Log("Loading Default Config…")
   cfgfile := defaultConfigDir + "config.default.yaml"
   unmarshalConfig(cfgfile, &cfg)
-  fmt.Println("Loading Custom Config…")
+  logger.Log("Loading Custom Config…")
   customcfgfile := configDir + "config.yaml"
   unmarshalConfig(customcfgfile, &cfg)
-  fmt.Println("Loading Default Services…")
+  logger.Log("Loading Default Services…")
   svcfile := defaultConfigDir + "services.default.yaml"
   unmarshalConfig(svcfile, &cfg)
-  fmt.Println("Loading Custom Services…")
+  logger.Log("Loading Custom Services…")
   customsvcfile := configDir + "services.yaml"
   unmarshalConfig(customsvcfile, &cfg)
   removeDisabledItems(&cfg)
@@ -64,21 +65,19 @@ func loadXMLTemplates(){
         "onoff": chooseOnOff,
       }
     t, err := template.New(name).Funcs(fmap).ParseFiles(tmpl)
-    if err != nil {
-      panic (err)
-    }
+    logger.CheckError(err)
     Templates[name] = t
   }
 }
 func unmarshalConfig(file string, cfg *Config)  {
-  if FileExists(file) {
+  if logger.FileExists(file) {
     content, err := ioutil.ReadFile(file)
-    if err != nil {
-      fmt.Println("Error reading config :", file, " : ", err)
+    if !logger.ErrorOK(err){
+      logger.Log("Error reading config :", file, " : ", fmt.Sprintf("%v",err))
     }
     err2 := yaml.Unmarshal(content, &cfg)
-    if err2 != nil {
-      fmt.Println("Error unmarshaling config :", file, " : ", err2)
+    if !logger.ErrorOK(err2){
+      logger.Log("Error unmarshaling config :", file, " : ", fmt.Sprintf("%v",err2))
     }
   }
 }
@@ -108,22 +107,11 @@ func removeDisabledItems(cfg *Config) {
   }
   cfg.OtherServices = new_svcs
 }
-func FileExists(file string) bool {
-  exists := false
-  if _, err := os.Stat(file); err == nil {
-    exists = true
-  } else {
-    fmt.Println(err)
-    fmt.Printf("File %s does not exist\n", file);
-  }
-  return exists
-}
+
 
 func JSONify(content interface{}) string {
   data, err := json.Marshal(content)
-  if err != nil {
-    fmt.Println(err)
-  }
+  logger.CheckError(err)
   return string(data)
 }
 func parseUsername(svc Service, email string) string {
@@ -160,6 +148,6 @@ func GetSessionIP() string {
 	if forwarded != "" {
 		ip = forwarded
 	}
-  fmt.Printf("Session %s Connect From : %s\r\f",ThisSession.ID, ip)
+  logger.Log("Session ", ThisSession.ID, " Connect From : ", ip)
 	return ip
 }
