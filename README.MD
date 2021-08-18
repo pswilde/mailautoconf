@@ -60,7 +60,7 @@ SRV _autodiscover._tcp.your.domain  3600 10 10 443  autoconfig.your.domain
 ```
 
 ## Compatibility  
-MailAutoConf has been tested and confirmed working with the following software packages  
+MailAutoConf has been tested and confirmed working (for IMAP and SMTP) with the following software packages  
 - [x] Thunderbird (v78 and probably earlier versions too)
 - [x] Evolution Mail (v3.40.3 and probably earlier versions too)
 - [x] Nextcloud Mail app
@@ -86,8 +86,11 @@ Calendar and AddressBook is in the autoconfig XML documentation, but currently n
 
 
 ## When will it be ready for production?
-Well, not yet. Though it does sort of work already.  
-I'm working on this ultimately for my own use for my own small business. I'm hoping once it's good enough I could deploy the set up to my businesses customers and ultimately get them away from a Microsoft Exchange based environment. There's a long way to go for that right now though.  
+It works for non-Microsoft email clients now (see Compatibility above).  
+Outlook's autodiscover is a troublesome little blighter, MailAutoConf does generate a valid Autodiscover.xml, but modern Outlook clients use an Autodiscover.json file now which isn't documented anywhere. I'm working on this and hope to get Outlook Compatibility as soon as possible.  
+
+Then it's down to Autoconfiguration of Calendars and AddressBooks... but that's down to the email client developers really...  
+
 
 If you feel you may be able to help, or ideas on features and their implementation, notice any bugs, or just want to say hi. Please do so and submit a pull request if required.
 
