@@ -6,6 +6,7 @@ Github : https://github.com/pswilde/mailautoconf
 <a href="https://www.buymeacoffee.com/pswilde" target="_blank">
   <img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" height="60" width="217" alt="Buy Me A Coffee" style="height: 30px !important;width: 106px !important;" >
 </a>  
+  
 ## What is MailAutoConf?
 MailAutoConf is autodiscover/autoconfig web server for self-hosted mail services
 which do not have their own autodiscover service.
