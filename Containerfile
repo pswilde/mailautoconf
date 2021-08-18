@@ -6,9 +6,6 @@ RUN go build -o /mailautoconf/mailautoconf
 
 FROM alpine:3.14
 
-ENV UID=1426 \
-    GID=1426
-
 RUN apk add --no-cache bash
 COPY --from=builder /mailautoconf/mailautoconf /mailautoconf/mailautoconf
 COPY --from=builder /mailautoconf/default-config /mailautoconf/default-config
