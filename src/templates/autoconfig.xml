@@ -30,7 +30,7 @@
         <addressBook type="{{ .Type | lower }}">
           <username>{{ $.Email | parseUsername . }}</username>
           <authentication>{{ .Authentication }}</authentication>
-          <serverURL>{{ .Server }}</serverURL>
+          <serverURL>{{ .Server }}addressbooks/users/{{ $.Email | parseUsername . }}/contacts/</serverURL>
         </addressBook>
       {{ end }}
     {{ end }}
@@ -39,7 +39,7 @@
         <calendar type="{{ .Type | lower }}">
           <username>{{ $.Email | parseUsername . }}</username>
           <authentication>{{ .Authentication }}</authentication>
-          <serverURL>{{ .Server }}</serverURL>
+          <serverURL>{{ .Server }}calendars/{{ $.Email | parseUsername . }}/personal/</serverURL>
         </calendar>
       {{ end }}
     {{ end }}
